@@ -514,7 +514,7 @@ f17fy2 <- subset(f17fy, select = c(emplid, fy_last_name, fy_first_name, fys_year
 
 
 #Append FY datasets
-FYds <- rbind(f15fy2, f16fy2, f17fy2)
+FYds <- rbind(f15fy4, f16fy2, f17fy2)
 str(FYds)
 table(FYds$fys_year)
 
