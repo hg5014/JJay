@@ -685,7 +685,7 @@ data16f18_3 <- subset(data16f18_wcohs, select = c(emplid, last_name, first_name,
 
 summary(data16f18_3)
 
-for(i in 17:63){
+for(i in 16:63){
   if(names(data16f18_3[i])%in%c("f15gpa_cuml", "s16gpa_cuml", "f16gpa", "f16gpa_cuml"
                                 , "s17gpa", "s17gpa_cuml", "s17dismiss", "f17gpa", "f17gpa_cuml"
                                 , "s18gpa", "s18gpa_cuml", "s18dismiss", "s18degree")){
