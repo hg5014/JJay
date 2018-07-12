@@ -395,11 +395,9 @@ f15fy3$n_data_cohort <- ifelse(f15fy3$data_cohort=="No FYS"&f15fy3$SPFYS==1&!is.
 
 table(f15fy3$n_data_cohort, f15fy3$data_cohort, f15fy3$SPFYS, useNA = "always")
 
-
-
-### PICK UP HERE ######
-
-
+f15fy4 <- f15fy3[ ,!names(f15fy3) %in% c("data_cohort", "SPFYS")]
+names(f15fy4)[names(f15fy4)=="n_data_cohort"] <- "data_cohort"
+str(f15fy4)
 
 
 #Read in and prepare F16 FY tracker
@@ -553,17 +551,23 @@ data16f18_wcohs$odata_cohort <- data16f18_wcohs$data_cohort
 
 table(data16f18_wcohs$odata_cohort, data16f18_wcohs$data_cohort)
 
-data16f18_wcohs$data_cohort <- ifelse(
-  data16f18_wcohs$fys_year=="F15"&data16f18_wcohs$odata_cohort=="HONR - No FYS"
-  , "HONR"
-  , ifelse(data16f18_wcohs$fys_year=="F16"&data16f18_wcohs$odata_cohort %in% c("HON FYS", "HON No FYS")
-           , "HONR"
-           , ifelse(data16f18_wcohs$fys_year=="F16"&data16f18_wcohs$odata_cohort %in% c("PCF JUST", "R&I JUST", "SJ JUST")
-                  , "Justice"
-                  , data16f18_wcohs$odata_cohort 
-                  )
-          )
-  )
+data16f18_wcohs$data_cohort <- ifelse(data16f18_wcohs$odata_cohort %in% c("HON FYS", "HON No FYS", "HONR - No FYS")
+                                      , "HONR"
+                                      , ifelse(data16f18_wcohs$odata_cohort %in% c("PCF JUST", "R&I JUST", "SJ JUST", "JUST")
+                                               , "Justice"
+                                               , ifelse(data16f18_wcohs$odata_cohort=="NO FYS: SP FYS"
+                                                        , "SP FYS"
+                                                        , ifelse(data16f18_wcohs$odata_cohort=="ADL"
+                                                                 , "ADTE"
+                                                                 , ifelse(data16f18_wcohs$odata_cohort=="ES"
+                                                                          , "ERLY"
+                                                                          , data16f18_wcohs$odata_cohort )
+                                                                 )
+                                                        )
+                                               )
+                                      )
+
+data16f18_wcohs$data_cohort <- toupper(data16f18_wcohs$data_cohort)
 
 table(data16f18_wcohs$odata_cohort, data16f18_wcohs$data_cohort)
 
@@ -673,7 +677,7 @@ data16f18_3 <- subset(data16f18_wcohs, select = c(emplid, last_name, first_name,
                                               , f16enr, f16credatt, f16enr_30P, f16credern, f16credern_cuml, f16gpa, f16gpa_cuml
                                               , s17enr, s17credatt, s17credern, s17credern_cuml, s17gpa, s17gpa_cuml, s17dismiss
                                               , f17enr, f17credatt, f17enr_30P, f17enr_60P, f17credern, f17credern_cuml, f17gpa, f17gpa_cuml
-                                              , s18enr, s18credatt, s18credern, s18cred_latr, s18gpa, s18credtrn, s18credern_cuml, s18gpa_cuml, s18dismiss, s18degree
+                                              , s18enr, s18credatt, s18comp, s18credern, s18cred_latr, s18gpa, s18credtrn, s18credern_cuml, s18gpa_cuml, s18dismiss, s18degree
                                               , f18enr, f18credatt, f18enr_30P, f18enr_60P, f18enr_90P
                                               , credits_cumulative, gpa_cumulative))
 
@@ -681,7 +685,7 @@ data16f18_3 <- subset(data16f18_wcohs, select = c(emplid, last_name, first_name,
 
 summary(data16f18_3)
 
-for(i in 16:62){
+for(i in 17:63){
   if(names(data16f18_3[i])%in%c("f15gpa_cuml", "s16gpa_cuml", "f16gpa", "f16gpa_cuml"
                                 , "s17gpa", "s17gpa_cuml", "s17dismiss", "f17gpa", "f17gpa_cuml"
                                 , "s18gpa", "s18gpa_cuml", "s18dismiss", "s18degree")){
